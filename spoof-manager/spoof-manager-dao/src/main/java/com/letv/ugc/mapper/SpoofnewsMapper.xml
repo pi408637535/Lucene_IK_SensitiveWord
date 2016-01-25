@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.letv.ugc.mapper.SpoofnewsMapper" >
+  <resultMap id="BaseResultMap" type="com.letv.ugc.pojo.Spoofnews" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="is_parent" property="isParent" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="targetUrl" property="targeturl" jdbcType="VARCHAR" />
+    <result column="targetContent" property="targetcontent" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="targetSummary" property="targetsummary" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, parent_id, is_parent, title, imageUrl, content, targetUrl, targetContent, summary, 
+    comment, targetSummary
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.letv.ugc.pojo.SpoofnewsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from spoofnews
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from spoofnews
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from spoofnews
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.letv.ugc.pojo.SpoofnewsExample" >
+    delete from spoofnews
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.letv.ugc.pojo.Spoofnews" >
+    insert into spoofnews (id, parent_id, is_parent, 
+      title, imageUrl, content, 
+      targetUrl, targetContent, summary, 
+      comment, targetSummary)
+    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{isParent,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{imageurl,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{targeturl,jdbcType=VARCHAR}, #{targetcontent,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{comment,jdbcType=VARCHAR}, #{targetsummary,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.letv.ugc.pojo.Spoofnews" >
+    insert into spoofnews
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="isParent != null" >
+        is_parent,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="imageurl != null" >
+        imageUrl,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="targeturl != null" >
+        targetUrl,
+      </if>
+      <if test="targetcontent != null" >
+        targetContent,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="targetsummary != null" >
+        targetSummary,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="isParent != null" >
+        #{isParent,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="targeturl != null" >
+        #{targeturl,jdbcType=VARCHAR},
+      </if>
+      <if test="targetcontent != null" >
+        #{targetcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="targetsummary != null" >
+        #{targetsummary,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.letv.ugc.pojo.SpoofnewsExample" resultType="java.lang.Integer" >
+    select count(*) from spoofnews
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update spoofnews
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.parentId != null" >
+        parent_id = #{record.parentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.isParent != null" >
+        is_parent = #{record.isParent,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imageurl != null" >
+        imageUrl = #{record.imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.targeturl != null" >
+        targetUrl = #{record.targeturl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.targetcontent != null" >
+        targetContent = #{record.targetcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.summary != null" >
+        summary = #{record.summary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comment != null" >
+        comment = #{record.comment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.targetsummary != null" >
+        targetSummary = #{record.targetsummary,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update spoofnews
+    set id = #{record.id,jdbcType=BIGINT},
+      parent_id = #{record.parentId,jdbcType=BIGINT},
+      is_parent = #{record.isParent,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      imageUrl = #{record.imageurl,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      targetUrl = #{record.targeturl,jdbcType=VARCHAR},
+      targetContent = #{record.targetcontent,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
+      comment = #{record.comment,jdbcType=VARCHAR},
+      targetSummary = #{record.targetsummary,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.letv.ugc.pojo.Spoofnews" >
+    update spoofnews
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="isParent != null" >
+        is_parent = #{isParent,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="targeturl != null" >
+        targetUrl = #{targeturl,jdbcType=VARCHAR},
+      </if>
+      <if test="targetcontent != null" >
+        targetContent = #{targetcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="targetsummary != null" >
+        targetSummary = #{targetsummary,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.letv.ugc.pojo.Spoofnews" >
+    update spoofnews
+    set parent_id = #{parentId,jdbcType=BIGINT},
+      is_parent = #{isParent,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      imageUrl = #{imageurl,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      targetUrl = #{targeturl,jdbcType=VARCHAR},
+      targetContent = #{targetcontent,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      targetSummary = #{targetsummary,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
