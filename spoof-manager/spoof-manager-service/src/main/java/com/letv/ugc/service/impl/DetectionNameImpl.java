@@ -1,8 +1,10 @@
 package com.letv.ugc.service.impl;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +17,15 @@ import javax.annotation.Resource;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.letv.ugc.common.model.ApiCommonJsonResponse;
@@ -36,6 +45,8 @@ public class DetectionNameImpl implements DetectionName {
 	@Resource
 	SpoofnewsMapper spoofnewsMapper;
 	
+	@Resource
+	private VelocityConfigurer velocityConfigurer;
 
 	private static Set<String> set = null;
 	
@@ -82,9 +93,8 @@ public class DetectionNameImpl implements DetectionName {
 		if(set == null)
 			set = readFileByLines(filePath);
 		
-		String url = "ugcpm/wodetoutiao";
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-		String date = df.format(new Date());
+		
+		String targetURL = null;
 		/*
 		 * 先进行检测对输入的姓名
 		 * 当姓名检测合格后对文章进行拷贝其中包含新地址的URL
@@ -112,14 +122,21 @@ public class DetectionNameImpl implements DetectionName {
 				newSpoof.setTargetcontent(oldSpoof.getContent().replace("$姓名$", replaceName));
 				newSpoof.setTargetsummary(oldSpoof.getSummary().replace("$姓名$", replaceName));
 				
-				newSpoof.setTargeturl("www.baidu.com");
+				//临时的url
+				newSpoof.setTargeturl(" ");
 				
 				
 				newSpoof.setTitle(oldSpoof.getTitle());
 				newSpoof.setComment(oldSpoof.getComment());				
 				newSpoof.setSummary(oldSpoof.getComment());
+				newSpoof.setParentTitile(oldSpoof.getParentTitile());
+				newSpoof.setParentId((long)-1);
+				newSpoof.setIsParent(0);
+				
+				
 				
 				spoofnewsMapper.insert(newSpoof);
+				targetURL = this.generatorStaticPage(newSpoof);
 			}
 			//ApiCommonJsonResponse response = ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.CORRECT,"可以使用");
 			
@@ -128,6 +145,82 @@ public class DetectionNameImpl implements DetectionName {
 		}
 		
 	}
+	
+	
+	
+	/*
+	 * 生成资源页面
+	 * ①需要一个SpoofNews类用于填充静态模板
+	 * ②将生成的html返回URL. URL格式 wodetoutiao+ date + 文章id
+	 * */
+	public String generatorStaticPage(Spoofnews spoofnews){
+		String url = "wodetoutiao";
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		String date = df.format(new Date());
+		
+		SpoofnewsExample example = new SpoofnewsExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(spoofnews.getId());
+		String targetURL = url + "/" + date + "/" + spoofnews.getId();
+		spoofnews.setTargeturl(targetURL);
+		spoofnewsMapper.updateByExample(spoofnews, example);
+		
+		
+		
+		VelocityEngine ve = null;
+		try {
+			ve = velocityConfigurer.createVelocityEngine();
+		} catch (VelocityException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");	
+		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+	
+		/*	ve.setProperty("input.encoding", "UTF-8");
+		ve.setProperty("output.encoding", "UTF-8");*/
+		ve.init();
+		//设置静态模板所在
+		Template actionTpt = ve.getTemplate("information.vm");
+		//PrintWriter pw=new PrintWriter("D:\\TestDirectory\\VM\\hello.html");
+		//将模板生成到指定位置
+		String path = "F:\\TestDirectory\\Spoof App\\vm\\" + targetURL + ".html";
+		//将获得的对象放入Velocity的环境上下文中方便取用 
+		VelocityContext ctx = new VelocityContext();
+		
+		Spoofnews information = new Spoofnews();
+		
+		information.setContent(spoofnews.getContent());
+		String []contents = information.getContent().split(" ");
+		information.setComment(spoofnews.getComment());
+		String []comments = information.getComment().split(" ");
+		//初始化模板引擎
+		//Velocity.init("D:\\Git Repository\\Lucene_IK_SensitiveWord\\spoof-manager\\spoof-manager-web\\src\\main\\resources\\properties\\velocity.properties");
+		//获取VelocityContext
+		//VelocityContext context = new VelocityContext();
+		//为Context设置变量
+		ctx.put("title", spoofnews.getParentTitile());
+		ctx.put("informationTitle", spoofnews.getTitle());
+		
+		ctx.put("contents", contents);	
+		ctx.put("comments", comments);
+		
+		this.merge(actionTpt, ctx, path);
+		return spoofnews.getTargeturl();
+	}
+	
+	private void merge(Template template, VelocityContext ctx, String path) {
+	 PrintWriter writer = null;
+	 try {
+		 writer = new PrintWriter(path);
+		 template.merge(ctx, writer);
+		 writer.flush();
+	 	} catch (FileNotFoundException e) {
+	 		e.printStackTrace();
+	 	} finally {
+	 		writer.close();
+	 	}
+	 }
 	
 	static Analyzer analyzer = new IKAnalyzer(true);//IK分词 
 	

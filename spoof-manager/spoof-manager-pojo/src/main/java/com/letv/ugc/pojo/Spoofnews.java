@@ -7,21 +7,23 @@ public class Spoofnews {
 
     private Integer isParent = 0;
 
-    private String title = "";
+    private String title;
 
-    private String imageurl = "";
+    private String imageurl = " ";
 
-    private String content = "";
+    private String content = " ";
 
-    private String targeturl = "";
+    private String targeturl;
 
-    private String targetcontent="";
+    private String targetcontent;
 
-    private String summary = "";
+    private String summary = " ";
 
-    private String comment = "";
+    private String comment = " ";
 
-    private String targetsummary = "";
+    private String targetsummary;
+
+    private String parentTitile;
 
     public Long getId() {
         return id;
@@ -109,5 +111,13 @@ public class Spoofnews {
 
     public void setTargetsummary(String targetsummary) {
         this.targetsummary = targetsummary == null ? null : targetsummary.trim();
+    }
+
+    public String getParentTitile() {
+        return parentTitile;
+    }
+
+    public void setParentTitile(String parentTitile) {
+        this.parentTitile = parentTitile == null ? null : parentTitile.trim();
     }
 }

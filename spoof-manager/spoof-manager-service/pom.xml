@@ -8,38 +8,38 @@
   <artifactId>spoof-manager-service</artifactId>
   
   <dependencies>
-	<dependency>
-		<groupId>com.letv.ugc.spoof</groupId>
-  			<artifactId>spoof-manager-dao</artifactId>
-   		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-beans</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-webmvc</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-jdbc</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-aspects</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-context-support</artifactId>
-	</dependency>
-	
-	<dependency>
+		<dependency>
+			<groupId>com.letv.ugc.spoof</groupId>
+		 			<artifactId>spoof-manager-dao</artifactId>
+		  		<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
 		</dependency>	
@@ -47,11 +47,20 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
 		</dependency>
-		
+			
 		<!-- IK分析器 -->
 		<dependency>
-	        <groupId>org.wltea.ik-analyzer</groupId>
-	        <artifactId>ik-analyzer</artifactId>
+		       <groupId>org.wltea.ik-analyzer</groupId>
+		       <artifactId>ik-analyzer</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.velocity</groupId>
+		  <artifactId>velocity</artifactId>
+		</dependency>
+		
+       	<dependency>
+		  <groupId>org.apache.velocity</groupId>
+		  <artifactId>velocity-tools</artifactId>
 		</dependency>
 	</dependencies>
 </project>

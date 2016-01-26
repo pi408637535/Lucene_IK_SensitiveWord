@@ -843,6 +843,76 @@ public class SpoofnewsExample {
             addCriterion("targetSummary not between", value1, value2, "targetsummary");
             return (Criteria) this;
         }
+
+        public Criteria andParentTitileIsNull() {
+            addCriterion("parent_titile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileIsNotNull() {
+            addCriterion("parent_titile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileEqualTo(String value) {
+            addCriterion("parent_titile =", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileNotEqualTo(String value) {
+            addCriterion("parent_titile <>", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileGreaterThan(String value) {
+            addCriterion("parent_titile >", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileGreaterThanOrEqualTo(String value) {
+            addCriterion("parent_titile >=", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileLessThan(String value) {
+            addCriterion("parent_titile <", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileLessThanOrEqualTo(String value) {
+            addCriterion("parent_titile <=", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileLike(String value) {
+            addCriterion("parent_titile like", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileNotLike(String value) {
+            addCriterion("parent_titile not like", value, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileIn(List<String> values) {
+            addCriterion("parent_titile in", values, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileNotIn(List<String> values) {
+            addCriterion("parent_titile not in", values, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileBetween(String value1, String value2) {
+            addCriterion("parent_titile between", value1, value2, "parentTitile");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentTitileNotBetween(String value1, String value2) {
+            addCriterion("parent_titile not between", value1, value2, "parentTitile");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

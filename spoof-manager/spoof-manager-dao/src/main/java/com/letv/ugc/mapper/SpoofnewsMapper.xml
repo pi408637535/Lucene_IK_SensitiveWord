@@ -13,6 +13,7 @@
     <result column="summary" property="summary" jdbcType="VARCHAR" />
     <result column="comment" property="comment" jdbcType="VARCHAR" />
     <result column="targetSummary" property="targetsummary" jdbcType="VARCHAR" />
+    <result column="parent_titile" property="parentTitile" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, parent_id, is_parent, title, imageUrl, content, targetUrl, targetContent, summary, 
-    comment, targetSummary
+    comment, targetSummary, parent_titile
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.letv.ugc.pojo.SpoofnewsExample" >
     select
@@ -107,14 +108,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.letv.ugc.pojo.Spoofnews" >
+  	<!-- selectKey:通过查询主键的sql语句，将查询结果设置到入参数的主键属性中 -->
+  	<!-- LAST_INSERT_ID:Mysql函数，通过该函数可以获取刚自增的ID，必须配合Insert语句使用  -->
+    <!-- order:selectKey中的sql和insert语句的执行顺序设置，相对于insert语句来说 -->
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+    	select last_insert_id();
+    </selectKey>
     insert into spoofnews (id, parent_id, is_parent, 
       title, imageUrl, content, 
       targetUrl, targetContent, summary, 
-      comment, targetSummary)
+      comment, targetSummary, parent_titile
+      )
     values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{isParent,jdbcType=INTEGER}, 
       #{title,jdbcType=VARCHAR}, #{imageurl,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{targeturl,jdbcType=VARCHAR}, #{targetcontent,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
-      #{comment,jdbcType=VARCHAR}, #{targetsummary,jdbcType=VARCHAR})
+      #{comment,jdbcType=VARCHAR}, #{targetsummary,jdbcType=VARCHAR}, #{parentTitile,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.letv.ugc.pojo.Spoofnews" >
     insert into spoofnews
@@ -152,6 +161,9 @@
       <if test="targetsummary != null" >
         targetSummary,
       </if>
+      <if test="parentTitile != null" >
+        parent_titile,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -186,6 +198,9 @@
       </if>
       <if test="targetsummary != null" >
         #{targetsummary,jdbcType=VARCHAR},
+      </if>
+      <if test="parentTitile != null" >
+        #{parentTitile,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -231,6 +246,9 @@
       <if test="record.targetsummary != null" >
         targetSummary = #{record.targetsummary,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentTitile != null" >
+        parent_titile = #{record.parentTitile,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +266,8 @@
       targetContent = #{record.targetcontent,jdbcType=VARCHAR},
       summary = #{record.summary,jdbcType=VARCHAR},
       comment = #{record.comment,jdbcType=VARCHAR},
-      targetSummary = #{record.targetsummary,jdbcType=VARCHAR}
+      targetSummary = #{record.targetsummary,jdbcType=VARCHAR},
+      parent_titile = #{record.parentTitile,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +305,9 @@
       <if test="targetsummary != null" >
         targetSummary = #{targetsummary,jdbcType=VARCHAR},
       </if>
+      <if test="parentTitile != null" >
+        parent_titile = #{parentTitile,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +322,8 @@
       targetContent = #{targetcontent,jdbcType=VARCHAR},
       summary = #{summary,jdbcType=VARCHAR},
       comment = #{comment,jdbcType=VARCHAR},
-      targetSummary = #{targetsummary,jdbcType=VARCHAR}
+      targetSummary = #{targetsummary,jdbcType=VARCHAR},
+      parent_titile = #{parentTitile,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
