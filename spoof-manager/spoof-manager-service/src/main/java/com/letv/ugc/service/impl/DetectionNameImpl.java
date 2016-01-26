@@ -55,6 +55,7 @@ public class DetectionNameImpl implements DetectionName {
 	
 	/*
 	 * 字符长度可以放在配置文件中
+	 * Spring进行扫描
 	 * */
 	@Override
 	public ApiCommonJsonResponse nameCheck(String replaceName, String filePath) {
