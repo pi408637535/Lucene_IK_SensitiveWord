@@ -3,7 +3,6 @@ package com.letv.ugc.common.utils;
 import java.util.Properties;
 
 public class SeparatorUtils {
-
     /* system properties to get separators */
     static final Properties PROPERTIES = new Properties(System.getProperties());
 
