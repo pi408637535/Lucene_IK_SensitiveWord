@@ -24,12 +24,14 @@ import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import com.letv.ugc.common.model.ApiCommonJsonResponse;
 import com.letv.ugc.common.model.ApiCommonJsonResponseErrCodes;
+import com.letv.ugc.common.utils.SeparatorUtils;
 import com.letv.ugc.mapper.SpoofnewsMapper;
 import com.letv.ugc.pojo.Spoofnews;
 import com.letv.ugc.pojo.SpoofnewsExample;
@@ -127,8 +129,9 @@ public class DetectionNameImpl implements DetectionName {
 				
 				
 				newSpoof.setTitle(oldSpoof.getTitle());
-				newSpoof.setComment(oldSpoof.getComment());				
-				newSpoof.setSummary(oldSpoof.getComment());
+				newSpoof.setContent(" ");			
+				newSpoof.setComment(oldSpoof.getComment());
+				newSpoof.setSummary(oldSpoof.getSummary());
 				newSpoof.setParentTitile(oldSpoof.getParentTitile());
 				newSpoof.setParentId((long)-1);
 				newSpoof.setIsParent(0);
@@ -140,12 +143,16 @@ public class DetectionNameImpl implements DetectionName {
 			}
 			//ApiCommonJsonResponse response = ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.CORRECT,"可以使用");
 			
-			return ApiCommonJsonResponse.newNormalResponse("targetURL", newSpoof.getTargeturl());
+			return ApiCommonJsonResponse.newNormalResponse("targetURL", targetURL);
 			
 		}
 		
 	}
 	
+	@Value("${SERVER_BASE_URL}")
+	private String SERVER_BASE_URL;
+	@Value("${SERVER_FILE_PATH}")
+	private String SERVER_FILE_PATH;
 	
 	
 	/*
@@ -154,15 +161,17 @@ public class DetectionNameImpl implements DetectionName {
 	 * ②将生成的html返回URL. URL格式 wodetoutiao+ date + 文章id
 	 * */
 	public String generatorStaticPage(Spoofnews spoofnews){
-		String url = "wodetoutiao";
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		//String url = "wodetoutiao";
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
 		String date = df.format(new Date());
 		
 		SpoofnewsExample example = new SpoofnewsExample();
 		Criteria criteria = example.createCriteria();
 		criteria.andIdEqualTo(spoofnews.getId());
-		String targetURL = url + "/" + date + "/" + spoofnews.getId();
-		spoofnews.setTargeturl(targetURL);
+		String targetURL = SERVER_FILE_PATH +SeparatorUtils.getFileSeparator()  + date 
+			 +SeparatorUtils.getFileSeparator() + spoofnews.getId();
+		
+		spoofnews.setTargeturl(targetURL+".html");
 		spoofnewsMapper.updateByExample(spoofnews, example);
 		
 		
@@ -184,23 +193,32 @@ public class DetectionNameImpl implements DetectionName {
 		Template actionTpt = ve.getTemplate("information.vm");
 		//PrintWriter pw=new PrintWriter("D:\\TestDirectory\\VM\\hello.html");
 		//将模板生成到指定位置
-		String path = "F:\\TestDirectory\\Spoof App\\vm\\" + targetURL + ".html";
+		String path =  targetURL + ".html";
 		//将获得的对象放入Velocity的环境上下文中方便取用 
 		VelocityContext ctx = new VelocityContext();
 		
-		Spoofnews information = new Spoofnews();
+		//Spoofnews information = new Spoofnews();
 		
-		information.setContent(spoofnews.getContent());
-		String []contents = information.getContent().split(" ");
-		information.setComment(spoofnews.getComment());
-		String []comments = information.getComment().split(" ");
+		//内容
+		//information.setContent(spoofnews.getTargetcontent());
+		//String []contents = information.getContent().split(" ");
+		String []contents = spoofnews.getTargetcontent().split(" ");
+		//评论
+		//information.setComment(spoofnews.getComment());
+		//String []comments = information.getComment().split(" ");
+		String []comments = spoofnews.getComment().split(" ");
+		
 		//初始化模板引擎
 		//Velocity.init("D:\\Git Repository\\Lucene_IK_SensitiveWord\\spoof-manager\\spoof-manager-web\\src\\main\\resources\\properties\\velocity.properties");
 		//获取VelocityContext
 		//VelocityContext context = new VelocityContext();
 		//为Context设置变量
-		ctx.put("title", spoofnews.getParentTitile());
-		ctx.put("informationTitle", spoofnews.getTitle());
+		ctx.put("parentTitle", spoofnews.getParentTitile());
+		ctx.put("title", spoofnews.getTitle());
+
+		SimpleDateFormat dfNow = new SimpleDateFormat("yyyy-MM-dd HH:mm");//设置日期格式
+		String dateNow = dfNow.format(new Date());
+		ctx.put("date", dateNow);
 		
 		ctx.put("contents", contents);	
 		ctx.put("comments", comments);
