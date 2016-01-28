@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.letv.ugc.spoof</groupId>
+    <artifactId>spoof-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.letv.ugc.spoof</groupId>
+  <artifactId>Spoof-Manage</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>Spoof-Manage-dao</module>
+  	<module>Spoof-Manage-pojo</module>
+  	<module>Spoof-Manage-Server</module>
+  	<module>toutiao</module>
+  	
+  </modules>
+  
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>com.letv.ugc.spoof</groupId>
+  		<artifactId>spoof-common</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<uriEncoding>UTF-8</uriEncoding>
+					<port>8080</port>
+					<path>/</path>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

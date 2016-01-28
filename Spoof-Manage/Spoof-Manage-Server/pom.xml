@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.letv.ugc.spoof</groupId>
+    <artifactId>Spoof-Manage</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>Spoof-Manage-Server</artifactId>
+  <dependencies>
+		<dependency>
+			<groupId>com.letv.ugc.spoof</groupId>
+	 		<artifactId>Spoof-Manage-dao</artifactId>
+	  		<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+		</dependency>
+			
+		<!-- IK分析器 -->
+		<dependency>
+		       <groupId>org.wltea.ik-analyzer</groupId>
+		       <artifactId>ik-analyzer</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.velocity</groupId>
+		  <artifactId>velocity</artifactId>
+		</dependency>
+		
+       	<dependency>
+		  <groupId>org.apache.velocity</groupId>
+		  <artifactId>velocity-tools</artifactId>
+		</dependency>
+	</dependencies>
+</project>
