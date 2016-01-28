@@ -2,6 +2,7 @@ package com.letv.ugc.service;
 
 
 
+import com.letv.ugc.analyzer.common.exception.InvalidParamException;
 import com.letv.ugc.common.model.ApiCommonJsonResponse;
 
 public interface CheckNameServer {
@@ -11,7 +12,7 @@ public interface CheckNameServer {
 	 * 1 输入姓名多长
 	 * 2 输入姓名正确
 	 * */
-	public ApiCommonJsonResponse nameCheck(String replaceName);
+	public int nameCheck(String replaceName) throws InvalidParamException;
 	
 	/*
 	 * 若成功返回的 url在Map中

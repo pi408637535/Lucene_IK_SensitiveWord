@@ -19,9 +19,11 @@ import org.springframework.stereotype.Service;
 
 import com.letv.ugc.analyzer.common.analyzer.AnalyzerCreate;
 import com.letv.ugc.analyzer.common.config.AnalyzerConfig;
+import com.letv.ugc.analyzer.common.exception.InvalidParamException;
 import com.letv.ugc.annotation.NullParamValidation;
 import com.letv.ugc.common.model.ApiCommonJsonResponse;
 import com.letv.ugc.common.model.ApiCommonJsonResponseErrCodes;
+import com.letv.ugc.dao.MaterialDao;
 import com.letv.ugc.mapper.MaterialMapper;
 import com.letv.ugc.mapper.SpoofnewsMapper;
 import com.letv.ugc.pojo.Material;
@@ -34,12 +36,8 @@ import com.letv.ugc.service.CheckNameServer;
 public class CheckNameServerImpl implements CheckNameServer{
 	private static Logger logger = org.slf4j.LoggerFactory.getLogger(CheckNameServerImpl.class);
 
-	
-	
 	@Resource
-	MaterialMapper materialMapper;
-	@Resource
-	SpoofnewsMapper spoofnewsMapper;
+	MaterialDao materiaDao;
 	
 	@Value("${SERVER_BASE_URL}")
 	String SERVER_BASE_URL;
@@ -48,11 +46,11 @@ public class CheckNameServerImpl implements CheckNameServer{
 	
 	@Override
 	@NullParamValidation(allFieldNames = {"replaceName"})
-	public ApiCommonJsonResponse nameCheck(String replaceName) {
+	public int nameCheck(String replaceName) throws InvalidParamException{
 		/*if(set == null)
 			set = readFileByLines(filePath);*/
 		
-		if(replaceName.length() > 20){
+		/*if(replaceName.length() > 20){
 			return ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.TOOLONG,"输入姓名过长");
 		}else if(replaceName.length() < 2){
 			return ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.TOOShort,"输入姓名过短");
@@ -60,6 +58,15 @@ public class CheckNameServerImpl implements CheckNameServer{
 			return ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.VAGUE,"输入姓名中含有隐蔽词");
 		}else{
 			return ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.CORRECT,"可以使用");
+		}*/
+		if(replaceName.length() > 20){
+			throw new InvalidParamException(1,"LONG");
+		}else if(replaceName.length() < 2){
+			throw new InvalidParamException(2,"SHORT");
+		}else if(Tokenization(replaceName)){
+			throw new InvalidParamException(3,"FORBIT");
+		}else{
+			return 0;
 		}
 		
 	}
@@ -80,73 +87,19 @@ public class CheckNameServerImpl implements CheckNameServer{
 		}else if(Tokenization(replaceName)){
 			return ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.VAGUE,"输入姓名中含有隐蔽词");
 		}else{
-			SpoofnewsExample example = new SpoofnewsExample();
-			Criteria criteria = example.createCriteria();
-			criteria.andIdEqualTo(id);
-			List<Spoofnews> list =  spoofnewsMapper.selectByExample(example);
-			if(list.size() > 0){
-				/*
-				 * 需要确定id值在表中有这条记录
-				 * */
-				Spoofnews spoofnews = list.get(0);
-				Material material = new Material();
-				material.setParentTitle(spoofnews.getParentTitile());
-				material.setComment(spoofnews.getComment());
-				material.setContent(spoofnews.getContent());
-				material.setImageurl(spoofnews.getImageurl());
-				material.setReplacename(replaceName);
-				material.setSummary(spoofnews.getSummary());
-				material.setTitle(spoofnews.getTitle());
-			
-				materialMapper.insert(material);
-				long materialId = material.getId();
-				
+				long materialId = materiaDao.insertIntoTable(id, replaceName);
 				targetURL = SERVER_BASE_URL+"/"+SERVER_CONTROLLER+".do?"+"id="+materialId;
 
 			}
 			//ApiCommonJsonResponse response = ApiCommonJsonResponse.newErrorResponse(ApiCommonJsonResponseErrCodes.CORRECT,"可以使用");
 			
 			return ApiCommonJsonResponse.newNormalResponse("targetURL", targetURL);
-			
-		}
 	}
 	
 	
-	/*
-	 * 读取文件
-	 * 
-	 * 已经用spring来处理流
-	 * */
-	/*public static Set<String> readFileByLines(String fileName) {
-	    java.io.File file = new java.io.File(fileName);
-        BufferedReader reader = null;
-        Set<String> set = new TreeSet<String>();
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String tempString = null;
-            while ((tempString = reader.readLine()) != null) {
-               // System.out.println("line " + line + ": " + tempString);
-                set.add(tempString);
-            }
-            reader.close();
-        } catch (IOException e) {
-        	logger.error("[api err, /readFileByLines]", e);
-        } finally {
-            if (reader != null){
-                try {
-                    reader.close();   
-                }catch (IOException e) {
-                	logger.error("[api err, /readFileByLines]", e);
-               }
-            }
-            
-        }
-		return set;
-    }*/
+
 	
-	// 系统单例模式
-	//static Analyzer analyzer = new IKAnalyzer(true);//IK分词 
-	
+
 	//特殊字符检测
 	public boolean Tokenization(String word) {
 		Analyzer analyzer = AnalyzerCreate.getAnalyzer();

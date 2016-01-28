@@ -52,6 +52,16 @@
 			  <groupId>org.apache.velocity</groupId>
 			  <artifactId>velocity-tools</artifactId>
 			</dependency>
+			<dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            
+        </dependency>
+		<dependency>
+		    <groupId>net.sf.dozer</groupId>
+		    <artifactId>dozer-spring</artifactId>
+	
+		</dependency>
 	</dependencies>
 	
 	<!-- <build>
